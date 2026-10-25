@@ -1,0 +1,554 @@
+---
+title: "Untitled"
+author: "Mu"
+date: "2026-10-18"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# Group composition 
+ 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+library(scales)
+
+
+# Create the student dataframe
+student_df <- tibble(
+  S.No = c("01", "02", "03", "04", "05"),
+  Name_of_Student = c("Muhammad Imran", "Kenny Jeannite", "Samantha Mesa", "Tenzin Thakuri", "Shanice Smith"),
+  Email = c("Muhammad.imran91@stu-mail.sps.cuny.edu", 
+            "kenny.jeannite72@cuny.edu", 
+            "samantha.mesa84@login.cuny.edu", 
+            "tenzin.thakuri35@login.cuny.edu", 
+            "shanice.smith16@cuny.edu")
+)
+
+# Render as a publication-ready markdown table
+kable(student_df, col.names = c("S.No", "Name of Student", "Email"))
+
+```
+
+
+# 1. Introduction and Background
+After an in-depth discussion of the research question, “Which data science skills are most valued?”, the group concluded that addressing this topic requires an empirical, data-driven approach that goes beyond merely listing ubiquitous programming languages or routine, repetitive tasks. To establish a rigorous foundation for this study, it is essential to first define what constitutes "value." In this regard, the group asserts that the value of a data science skill is best measured by its ability to create distinct differentiation within an organization.
+
+Rather than viewing skills through the lens of basic technical proficiency, true value manifests when competencies enable a data science team or individual to drive competitive advantage, solve non-standard business challenges, and propel strategic transformation. Under this framework, organizational differentiation can be operationalized across three key dimensions:
+
+* Strategic Impact vs. Commodity Work: Differentiating skills move professionals away from replaceable execution (e.g., standard baseline modeling or basic reporting) toward high-leverage capabilities, such as translating complex domain problems into actionable algorithmic frameworks or designing end-to-end architectures.
+* Problem-Solving Complexity & Novelty: Value is defined by the capacity to tackle unstructured, ambiguous problems that off-the-shelf automated AI tools cannot resolve. Skills in advanced statistical inference, causal modeling, and custom system design allow organizations to innovate rather than merely keep pace.
+* Value Creation and Measurable ROI: Skills create high differentiation when they directly influence enterprise key performance indicators (KPIs)—whether by optimizing core operational workflows, unlocking new revenue streams, or providing proprietary insights competitors cannot easily replicate.
+
+By defining value through organizational differentiation, this work will try to establish a quantitative framework to evaluate market data, job market premiums, and business outcomes, ultimately pinpointing the exact capabilities that elevate data science from a functional utility to a strategic asset.
+
+
+# 2. Proposed Analytical Pipeline
+
+##    Step A: Environment Setup & Data Ingestion
+
+This step loads the required libraries (tidyverse for data manipulation and ggplot2 for visualization) and imports your dataset from the github where I stored the data files, with robust character encoding.
+After the loading process the following table of information loaded in to the dataset;
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+
+df <- read_csv("https://raw.githubusercontent.com/Muhammad-Imran91/607/main/data_final.csv", locale = locale(encoding = "latin1"))
+
+
+#cat("Dataset successfully loaded with", nrow(df), "rows and", ncol(df), "columns.\n")
+# head(select(df, ResponseId, MainBranch, DevType, CompTotal), 5)
+
+
+dimension_summary <- data.frame(
+  Dimension = c("Rows", "Columns"),
+  Total = c(nrow(df), ncol(df))
+)
+
+# Render as a table
+kable(dimension_summary, col.names = c("Dataset Component", "Total Count"))
+
+
+# Show all columns
+#colnames(df)
+
+
+```
+
+##  Step B: Data Cleaning & Outlier Management
+
+Survey datasets frequently include extreme compensation outliers, zero values, or missing financial records. This step cleans CompTotal by removing non-positive entries and filtering out extreme outliers above the 99th percentile.
+
+The code snippet under this step generates a clean, formatted presentation table that summarizes the physical size of your dataset (df). Specifically, it performs the following tasks:
+
+* Loads the knitr package: Imports the knitr library, which is built into R Markdown and Quarto environments to render data frames into professional Markdown tables.
+
+* Extracts and structures dataset dimensions: Uses nrow(df) to count the total rows and ncol(df) to count the total columns, organizing these counts into a small, two-row data frame called dimension_summary.
+
+* Renders the final table: Uses the kable() function to convert the summary data frame into a styled table with custom headers ("Dataset Component" and "Total Count") for your final output document.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# Clean CompTotal and filter valid records
+df_clean <- df %>%
+  mutate(CompTotal = as.numeric(CompTotal)) %>%
+  filter(!is.na(CompTotal), CompTotal > 0)
+
+# Remove extreme outliers above the 99th percentile for robust financial analysis
+comp_99 <- quantile(df_clean$CompTotal, 0.99, na.rm = TRUE)
+df_clean <- df_clean %>%
+  filter(CompTotal <= comp_99)
+
+cat("Cleaned dataset records for financial analysis:", nrow(df_clean), "\n")
+cat("Median Compensation: $", format(median(df_clean$CompTotal), big.mark = ","), "\n", sep = "")
+cat("Mean Compensation: $", format(round(mean(df_clean$CompTotal), 2), big.mark = ","), "\n", sep = "")
+
+
+```
+
+##  Step C: Text Parsing & Skill Extraction (tidyverse Unnesting)
+
+Survey columns storing multi-selected technologies (e.g., LanguageHaveWorkedWith) use semicolon separators. Using separate_rows() tokenizes these strings into individual skill observations.
+
+The chart below highlights the most widely utilized technologies based on survey respondents' work experience. JavaScript leads the rankings with 501 respondents, closely followed by HTML/CSS (483), SQL (460), and Python (417). Mid-tier entries include Bash/Shell (352) and TypeScript (327), while Java (216), C# (214), PowerShell (189), and C++ (159) round out the remainder of the top ten.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# Explode semicolon-separated language column into individual rows
+
+df_langs <- df_clean %>%
+
+  filter(!is.na(LanguageHaveWorkedWith)) %>%
+
+  separate_rows(LanguageHaveWorkedWith, sep = ";") %>%
+
+  mutate(Language = str_trim(LanguageHaveWorkedWith))
+
+
+
+# Calculate top 10 most frequent languages
+df_langs1 <- df_langs
+top_langs <- df_langs %>%
+
+  count(Language, sort = TRUE) %>%
+
+  head(10)
+
+
+
+# print("Top 10 Programming Languages Overall:")
+
+# print(top_langs)
+
+
+
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(scales)
+
+# Process data and calculate top 10 languages
+df_langs <- df_clean %>%
+  filter(!is.na(LanguageHaveWorkedWith)) %>%
+  separate_rows(LanguageHaveWorkedWith, sep = ";") %>%
+  mutate(Language = str_trim(LanguageHaveWorkedWith)) %>%
+  count(Language, sort = TRUE) %>%
+  slice_max(n, n = 10)
+
+# Create a clean horizontal bar chart
+ggplot(df_langs, aes(x = reorder(Language, n), y = n)) +
+  geom_col(fill = "#2b5c8f", width = 0.7) +
+  geom_text(aes(label = comma(n)), hjust = -0.15, size = 3.5) +
+  coord_flip() +
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Top 10 Most Popular Programming Languages",
+    subtitle = "Based on languages respondents have worked with",
+    x = NULL,
+    y = "Number of Respondents"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(color = "gray30")
+  )
+
+```
+
+
+
+
+## Step D: Economic Differentiation Analysis (Compensation Premiums)
+
+To substantiate your research argument that true skill value is driven by organizational differentiation (rather than routine execution), this step groups respondents by developer roles and advanced skill sets, calculating median and mean compensation premiums.
+
+The empirical data demonstrates that specialization and market differentiation serve as the primary drivers of earning potential in the tech industry. While generalist roles such as full-stack developers represent the largest workforce segment ($n = 230$), they command a baseline median compensation of $100,000.
+
+conversely, specialized positions like DevOps engineers ($n = 17$, median $144,700$) and data engineers ($n = 18$, median $137,500) yield premiums upwards of 37% to 44% above generalists due to talent scarcity in complex infrastructure domains. 
+
+A parallel trend emerges in technical skill sets: high-adoption, foundational tools like SQL ($n = 460$, median $112,500$) and Python ($n = 417$, median $113,000$), show lower median earnings compared to niche, high-demand languages like Go ($n = 117$, median $138,000$) and Ruby ($n = 52$, median $135,000).
+
+Ultimately, moving away from commoditized skill sets toward differentiated expertise—whether in specialized architecture, advanced domain execution, or technical management ($n = 26$, median $202,500), consistently yields significant economic rewards. 
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# 1. Compensation Analysis by Developer Role (DevType)
+role_comp <- df_clean %>%
+  filter(!is.na(DevType)) %>%
+  separate_rows(DevType, sep = ";") %>%
+  mutate(DevType = str_trim(DevType)) %>%
+  group_by(DevType) %>%
+  summarise(
+    Respondent_Count = n(),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Mean_Comp = mean(CompTotal, na.rm = TRUE)
+  ) %>%
+  filter(Respondent_Count >= 10) %>%
+  arrange(desc(Median_Comp)) %>%
+  slice_head(n = 10) # Select top 10 for clean visualization
+
+# 2. Reshape to long format
+role_comp_long <- role_comp %>%
+  pivot_longer(
+    cols = c(Median_Comp, Mean_Comp), 
+    names_to = "Comp_Type", 
+    values_to = "Compensation"
+  ) %>%
+  mutate(Comp_Type = if_else(Comp_Type == "Median_Comp", "Median Compensation", "Mean Compensation"))
+
+# 3. Create Horizontal Grouped Bar Chart
+ggplot(role_comp_long, aes(x = reorder(DevType, Compensation), y = Compensation, fill = Comp_Type)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  coord_flip() + # Horizontal layout for readable role titles
+  scale_y_continuous(labels = dollar_format()) +
+  scale_fill_manual(values = c("Median Compensation" = "#264653", "Mean Compensation" = "#e76f51")) +
+  labs(
+    title = "Top 10 Developer Roles by Total Compensation",
+    subtitle = "Comparing median and mean earnings across survey respondents",
+    x = "Developer Role",
+    y = "Total Compensation",
+    fill = "Metric"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+```
+
+
+## Step E: Job Satisfaction & Organizational Impact Analysis
+
+This step cross-references JobSat (job satisfaction scores) with compensation and specialization to examine whether professionals tackling complex problem-solving report higher career leverage and satisfaction.
+
+The job satisfaction and compensation metrics further confirm that making professional differentiation is essential for maximizing earning potential. While high-supply generalist roles like full-stack developers ($n = 216$, median $100,000$) and front-end developers ($n = 29$, median $80,000$) occupy lower compensation tiers—with front-end developers also reporting the lowest job satisfaction (6.34)—differentiated roles command significant market premiums. Specialized technical roles such as data engineers ($n = 15$, median $125,000$) and solutions architects ($n = 47$, median $120,000$) leverage domain scarcity and complex system design to secure higher pay and top-tier job satisfaction (7.70). Most dramatically, engineering managers ($n = 20$) leverage leadership and strategic oversight to achieve the dataset's highest median compensation at $202,500—more than double the baseline for commoditized execution roles.   
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(scales)
+library(ggrepel)
+# Clean JobSat column and analyze by developer role
+role_satisfaction <- df_clean %>%
+  filter(!is.na(DevType), !is.na(JobSat), !is.na(CompTotal)) %>%
+  separate_rows(DevType, sep = ";") %>%
+  mutate(
+    DevType = str_trim(DevType),
+    JobSat = as.numeric(JobSat)
+  ) %>%
+  group_by(DevType) %>%
+  summarise(
+    Avg_Job_Sat = mean(JobSat, na.rm = TRUE),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Count = n()
+  ) %>%
+  filter(Count >= 15) %>%
+  arrange(desc(Avg_Job_Sat))
+
+# 2. Create the Bubble Scatter Plot
+ggplot(role_satisfaction, aes(x = Avg_Job_Sat, y = Median_Comp, size = Count, color = Avg_Job_Sat)) +
+  geom_point(alpha = 0.8) +
+  geom_text_repel(
+    aes(label = DevType),
+    size = 3.5,
+    box.padding = 0.5,
+    point.padding = 0.5,
+    max.overlaps = 20,
+    show.legend = FALSE
+  ) +
+  scale_y_continuous(labels = dollar_format()) +
+  scale_color_viridis_c(option = "plasma", direction = -1) +
+  scale_size_continuous(range = c(3, 12), labels = comma_format()) +
+  labs(
+    title = "Job Satisfaction vs. Median Compensation by Developer Role",
+    subtitle = "Bubble size represents respondent sample size (Count >= 15)",
+    x = "Average Job Satisfaction Score",
+    y = "Median Total Compensation",
+    color = "Avg. Satisfaction",
+    size = "Respondent Count"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    legend.position = "right"
+  )
+
+```
+## Step F: Publication-Ready Visualizations
+Generate professional visualizations to embed directly into your Quarto report
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(scales)
+
+# 1. Reload and Clean Data from GitHub
+df <- read_csv("https://raw.githubusercontent.com/Muhammad-Imran91/607/main/data_final.csv", locale = locale(encoding = "latin1"))
+
+df_clean <- df %>%
+  mutate(
+    CompTotal = as.numeric(CompTotal),
+    ToolCountWork = as.numeric(ToolCountWork)
+  ) %>%
+  filter(!is.na(CompTotal), CompTotal > 0)
+
+# Remove extreme outliers (99th percentile) for robust statistical calculations
+comp_99 <- quantile(df_clean$CompTotal, 0.99, na.rm = TRUE)
+tool_99 <- quantile(df_clean$ToolCountWork, 0.99, na.rm = TRUE)
+
+df_clean <- df_clean %>% 
+  filter(CompTotal <= comp_99)
+
+
+# ==========================================
+# PART 1: Specialized Data & AI Role Analysis
+# ==========================================
+# Filter for data, machine learning, and engineering roles to test economic differentiation
+
+
+
+# 1. Recode and separate multiple roles
+data_roles_df <- df_clean %>%
+  # Split semicolon-separated roles into individual rows per respondent
+  separate_rows(DevType, sep = ";") %>%
+  # Clean up extra whitespace around the role names
+  mutate(DevType = str_trim(DevType)) %>%
+  # Filter for data, AI, and machine learning related roles
+  filter(str_detect(DevType, regex("data|scientist|machine learning|AI|engineer|analyst", ignore_case = TRUE)))
+
+# 2. Summarize the data
+role_summary <- data_roles_df %>%
+  group_by(DevType) %>%
+  summarise(
+    Respondent_Count = n(),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Mean_Comp = mean(CompTotal, na.rm = TRUE),
+    Avg_Job_Sat = mean(as.numeric(JobSat), na.rm = TRUE)
+  ) %>%
+  arrange(desc(Median_Comp))
+
+# 3. Create the Chart
+ggplot(role_summary, aes(x = reorder(DevType, Median_Comp), y = Median_Comp, fill = Respondent_Count)) +
+  geom_col(width = 0.7) +
+  coord_flip() + # Flips to horizontal bars for easy reading of long role names
+  scale_y_continuous(labels = dollar_format()) +
+  scale_fill_viridis_c(option = "viridis", direction = -1) +
+  labs(
+    title = "Median Total Compensation by Data Role",
+    subtitle = "Recoded from multi-select survey responses",
+    x = "Developer / Data Role",
+    y = "Median Compensation",
+    fill = "Respondent\nCount"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank()
+  )
+
+# cat("\n=== Specialized Data & AI Role Compensation Premiums ===\n")
+# print(head(role_summary, 10))
+
+
+# ==========================================
+# PART 2: Database Technology Valuation
+# ==========================================
+# Unpack semicolon-separated database stack column
+df_dbs <- df_clean %>%
+  filter(!is.na(DatabaseHaveWorkedWith)) %>%
+  separate_rows(DatabaseHaveWorkedWith, sep = ";") %>%
+  mutate(Database = str_trim(DatabaseHaveWorkedWith))
+
+db_valuation <- df_dbs %>%
+  group_by(Database) %>%
+  summarise(
+    User_Count = n(),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Mean_Comp = mean(CompTotal, na.rm = TRUE)
+  ) %>%
+  filter(User_Count >= 25) %>% # Filter for robust sample size
+  arrange(desc(Median_Comp))
+
+# 2. Reshape data to long format for side-by-side comparison with a legend
+db_valuation_long <- db_valuation %>%
+  pivot_longer(
+    cols = c(Median_Comp, Mean_Comp), 
+    names_to = "Comp_Type", 
+    values_to = "Compensation"
+  ) %>%
+  mutate(Comp_Type = case_when(
+    Comp_Type == "Median_Comp" ~ "Median Compensation",
+    Comp_Type == "Mean_Comp" ~ "Mean Compensation"
+  ))
+
+# 3. Create the Lollipop Chart with all values and a legend
+ggplot(db_valuation_long, aes(x = reorder(Database, Compensation), y = Compensation, color = Comp_Type)) +
+  geom_segment(aes(x = reorder(Database, Compensation), xend = reorder(Database, Compensation), 
+                   y = 0, yend = Compensation), linewidth = 1, position = position_dodge(width = 0.5)) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  coord_flip() + # Horizontal layout for readability
+  scale_y_continuous(labels = dollar_format()) +
+  scale_color_manual(values = c("Median Compensation" = "#1f78b4", "Mean Compensation" = "#33a02c")) +
+  labs(
+    title = "Median vs. Mean Total Compensation by Database Technology",
+    subtitle = "Showing all databases with 25+ respondents",
+    x = "Database Technology",
+    y = "Total Compensation",
+    color = "Metric"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", size = 13),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+
+
+# ==========================================
+# PART 3: AI Tool Adoption vs. Compensation
+# ==========================================
+# Evaluate whether professionals using AI tools command higher compensation premiums
+ai_comp_analysis <- df_clean %>%
+  filter(!is.na(AISelect), !is.na(CompTotal)) %>%
+  group_by(AISelect) %>%
+  summarise(
+    Count = n(),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Mean_Comp = mean(CompTotal, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Median_Comp))
+
+# 2. Reshape data from wide to long format for side-by-side plotting
+ai_comp_long <- ai_comp_analysis %>%
+  pivot_longer(
+    cols = c(Median_Comp, Mean_Comp),
+    names_to = "Comp_Type",
+    values_to = "Compensation"
+  ) %>%
+  mutate(Comp_Type = case_when(
+    Comp_Type == "Median_Comp" ~ "Median Compensation",
+    Comp_Type == "Mean_Comp" ~ "Mean Compensation"
+  ))
+
+
+# ==========================================
+# PART 4: Tool Count Complexity & Compensation
+# ==========================================
+# Group employees by workplace tool count breadth to measure organizational differentiation
+# 1. Data Preparation (Your original bucketing and summary logic)
+
+df_tool_filtered <- df_clean %>%
+  filter(!is.na(ToolCountWork), ToolCountWork >= 0, ToolCountWork <= tool_99) %>%
+  mutate(
+    ToolBucket = case_when(
+      ToolCountWork <= 3  ~ "Low (0-3 tools)",
+      ToolCountWork <= 6  ~ "Moderate (4-6 tools)",
+      ToolCountWork <= 10 ~ "High (7-10 tools)",
+      ToolCountWork <= 20 ~ "Very High (11-20 tools)",
+      TRUE                ~ "Expert/Max (21+ tools)"
+    ),
+    ToolBucket = factor(ToolBucket, levels = c(
+      "Low (0-3 tools)", 
+      "Moderate (4-6 tools)", 
+      "High (7-10 tools)", 
+      "Very High (11-20 tools)", 
+      "Expert/Max (21+ tools)"
+    ))
+  )
+
+tool_comp_summary <- df_tool_filtered %>%
+  group_by(ToolBucket) %>%
+  summarise(
+    Respondent_Count = n(),
+    Median_Comp = median(CompTotal, na.rm = TRUE),
+    Mean_Comp = mean(CompTotal, na.rm = TRUE)
+  )
+
+# 2. Reshape data from wide to long format for side-by-side plotting
+tool_comp_long <- tool_comp_summary %>%
+  pivot_longer(
+    cols = c(Median_Comp, Mean_Comp),
+    names_to = "Comp_Type",
+    values_to = "Compensation"
+  ) %>%
+  mutate(Comp_Type = case_when(
+    Comp_Type == "Median_Comp" ~ "Median Compensation",
+    Comp_Type == "Mean_Comp" ~ "Mean Compensation"
+  ))
+
+# 3. Create the Grouped Bar Chart with data labels
+ggplot(tool_comp_long, aes(x = ToolBucket, y = Compensation, fill = Comp_Type)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_text(
+    aes(label = dollar(Compensation, accuracy = 1)),
+    position = position_dodge(width = 0.7),
+    vjust = -0.5,
+    size = 3.2
+  ) +
+  scale_y_continuous(
+    labels = dollar_format(),
+    limits = c(0, max(tool_comp_long$Compensation, na.rm = TRUE) * 1.15) # Headroom for labels
+  ) +
+  scale_fill_manual(values = c("Median Compensation" = "#2a9d8f", "Mean Compensation" = "#e76f51")) +
+  labs(
+    title = "Total Compensation by Workplace Tool Count",
+    subtitle = "Comparing median and mean earnings across tool usage volume buckets",
+    x = "Workplace Tool Count Bucket",
+    y = "Total Compensation",
+    fill = "Metric"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = 15, hjust = 1)
+  )
+
+
+
+```
+
+
+
+
+
+# Critical Analysis
+
+
+
+# Conclusion 
+
+
