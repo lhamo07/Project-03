@@ -114,9 +114,11 @@ write_csv(summary_tbl, file.path(OUT_DIR, "summary_by_group.csv"))
 kable(summary_tbl, format.args = list(big.mark = ","))
 ```
 
-The summary table shows differences in compensation and job satisfaction between the Differentiating and Execution skill groups. The Differentiating group included 43 respondents and the Execution group included 125. Median compensation was **32.6%** higher in the Differentiating group (**183,000 vs. 138,000**), and mean job satisfaction was also higher (**8.00 vs. 7.28**, based on 31 and 118 responses respectively). These findings support our argument that skill value is associated with organizational differentiation rather than routine execution.
+The summary statistics show differences in compensation and job satisfaction between the Differentiating and Execution groups. The Differentiating group included 43 respondents, while the Execution group included 125 respondents. Median annual compensation was \$183,000 for the Differentiating group and \$138,000 for the Execution group, a difference of \$45,000, or approximately 32.6%. Mean job satisfaction was also higher in the Differentiating group (8.00) than in the Execution group (7.28). These satisfaction averages were based on 31 and 118 respondents, respectively, who reported job satisfaction.
 
-# Plot theme
+These findings are consistent with our argument that roles involving specialized technical expertise, data science, AI/ML, cloud infrastructure, system architecture, and technical leadership are associated with higher compensation and job satisfaction than roles primarily focused on software development and implementation.
+
+Plot theme
 
 ```{r theme}
 COL <- c(Differentiating = "#2563c4", Execution = "#d9822b")
@@ -154,9 +156,9 @@ ggsave(file.path(OUT_DIR, "graph1_comp_by_role.png"), p1,
 p1
 ```
 
-The bar chart of median pay by role (differentiating vs. executions) shows median annual compensation for the eight roles with at least five US respondents. Compensation varied widely, from **\$88k** for front-end developers **(n = 11)** to **\$240k** for mobile developers **(n = 5)**. Among Differentiating roles, Engineering managers **(\$213k, n = 11)** and software or solutions architects **(\$175k, n = 13)** ranked second and third overall. Both earned more than every Execution role with ten or more respondents, including back-end (\$155k, n = 28) and full-stack developers (\$135k, n = 65).
+The role-level chart shows substantial variation in median annual compensation across the eight roles with at least five respondents. Mobile developers had the highest median compensation at \$240,000, although this estimate was based on only five respondents. Among the Differentiating roles, engineering managers had a median compensation of \$213,000, while software or solutions architects had a median of \$175,000. Both roles had higher median compensation than several execution-oriented roles, including back-end developers (\$155,000) and full-stack developers (\$135,000).
 
-Mobile developers and applied scientists do not fit the overall pattern. Each has only five respondents. Mobile developers (Execution) have the highest pay of all roles at \$240k. Applied scientists (Differentiating) earn \$130k, the same as desktop and enterprise developers and less than back-end and full-stack developers. With so few respondents, one or two individuals can shift a median sharply, so we treat both as unstable estimates.
+However, the results do not show a consistent advantage for every Differentiating role. Applied scientists had a median compensation of \$130,000, below that of back-end developers. These exceptions suggest that compensation varies by individual role, not simply by skill group.
 
 # Graph 2
 
@@ -187,9 +189,11 @@ ggsave(file.path(OUT_DIR, "graph2_satisfaction_vs_comp.png"), p2,
 p2
 ```
 
-In all three job satisfaction bands, it clearly shows Differentiating respondents earned more than Execution respondents: \$168k vs. \$132k (low), \$178k vs. \$150k (medium), and \$250k vs. \$130k (high). Pay rose with satisfaction for Differentiating respondents but stayed roughly flat for Execution respondents. This is consistent with our argument that differentiating work is both better paid and more satisfying.
+The chart compares median compensation across three job satisfaction bands for the Differentiating and Execution groups. In all three bands, the Differentiating group had higher median compensation. In the low-satisfaction band, the medians were \$168,000 and \$132,000; in the medium-satisfaction band, they were \$178,000 and \$150,000; and in the high-satisfaction band, they were \$250,000 and \$130,000, respectively.
 
-# Session info
+The largest difference appeared in the high-satisfaction band. However, the sample sizes within each band should be considered when interpreting these results. Overall, the Differentiating group had higher median compensation across all three satisfaction levels
+
+Session info
 
 ```{r session}
 writeLines(capture.output(sessionInfo()), file.path(OUT_DIR, "sessionInfo.txt"))
