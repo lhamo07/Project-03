@@ -1,8 +1,9 @@
 ---
-title: "DATA607Project3Code"
-author: "Samantha Mesa"
+title: "DATA607 Project3 Group Code"
+author: "Shanice Smith"
 date: "`r Sys.Date()`"
 output: html_document
+format: visual
 ---
 
 ```{r}
@@ -10,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Setup
+Before anything runs, we're installing all the packages we need. Then we're defining where the data lives and create an output folder to save everything to. If the CSV hasn’t been downloaded yet, we download it.
 
 ```{r packages}
 pkgs <- c("readr", "dplyr", "tidyr", "stringr", "ggplot2", "scales", "knitr")
@@ -25,7 +27,7 @@ if (!file.exists(DATA_FILE)) download.file(DATA_URL, DATA_FILE, mode = "wb", qui
 ```
 
 # Group definitions
-
+We're sorting various different developer roles into different categories and storing them into variables ("DIFF", EXEC") and these roles can used with the different values of the "WORKING" variable.
 ```{r groups}
 DIFF <- c("Architect, software or solutions", "Data scientist", "AI/ML engineer",
           "Applied scientist", "Data engineer", "Cloud infrastructure engineer",
@@ -39,6 +41,7 @@ WORKING <- c("Employed", "Independent contractor, freelancer, or self-employed")
 ```
 
 # Load data
+We're reading into the CSV with R and storing the data into the raw variable.
 
 ```{r load}
 raw <- read_csv(DATA_FILE, col_types = cols(.default = col_character()),
@@ -46,7 +49,7 @@ raw <- read_csv(DATA_FILE, col_types = cols(.default = col_character()),
 ```
 
 # Clean data
-
+We're cleaning out the raw variable. We're filtering out any rows we don't need, removing duplicates, and converting compensation and job satisfaction from character to numeric. Then we narrow down to US-based, actively working people whose pay falls between $20K–$1M. After that, we split the DevType column (since one person can have multiple roles), map each role to a skill group, and then figure out each respondent's primary group — if they have even one Differentiating role, they’re classified as Differentiating. Finally, we join that classification back to the main dataset and save both cleaned files.
 ```{r clean}
 n_raw <- nrow(raw)
 
@@ -103,7 +106,7 @@ kable(summary_tbl, format.args = list(big.mark = ","))
 ```
 
 # Plot theme
-
+This is our visual theme for plots across our various graphs, defined once at the beginning.
 ```{r theme}
 COL <- c(Differentiating = "#2563c4", Execution = "#d9822b")
 theme_proj <- theme_minimal(base_size = 12) +
@@ -116,7 +119,7 @@ theme_proj <- theme_minimal(base_size = 12) +
 ```
 
 # Graph 1
-
+We're displaying a bar chart of median pay by individual role and skill group, filtered to roles with at least 5 respondents.
 ```{r graph1, fig.height=6}
 g1 <- roles_long |>
   group_by(Role, SkillGroup) |>
@@ -141,7 +144,7 @@ p1
 ```
 
 # Graph 2
-
+We're displaying a grouped bar chart compares pay across job satisfaction levels (Low, Medium, High) for both skill groups side by side.
 ```{r graph2}
 g2 <- tidy |>
   filter(!is.na(JobSat)) |>
@@ -170,7 +173,7 @@ p2
 ```
 
 # Session info
-
+A log of our R environment details.
 ```{r session}
 writeLines(capture.output(sessionInfo()), file.path(OUT_DIR, "sessionInfo.txt"))
 sessionInfo()
