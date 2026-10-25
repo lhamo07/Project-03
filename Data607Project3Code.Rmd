@@ -140,6 +140,10 @@ ggsave(file.path(OUT_DIR, "graph1_comp_by_role.png"), p1,
 p1
 ```
 
+Graph 1 shows median annual pay by role for US respondents (roles with n≥5; respondents with several roles count toward each). Developer, mobile ranks highest at $240k, followed by two differentiating roles, Engineering manager ($213k) and Architect ($175k). Most execution developer roles fall between $130k and $155k, and Developer, front-end is lowest at $88k.
+
+Pay does not split cleanly by group at the role level: an execution role ranks first, and Applied scientist, a differentiating role, matches desktop developers at $130k. The difference appears when roles are combined, with a median of $183k for differentiating respondents compared with $138k for execution respondents.
+
 # Graph 2
 
 ```{r graph2}
@@ -168,6 +172,10 @@ ggsave(file.path(OUT_DIR, "graph2_satisfaction_vs_comp.png"), p2,
        width = 9, height = 5.5, dpi = 180, bg = "white")
 p2
 ```
+
+Graph 2 compares median pay for each skill group across three job satisfaction bands, with each respondent counted once. Differentiating respondents earn more in every band: $168k vs. $132k (Low), $178k vs. $150k (Medium) and $250k vs. $130k (High).
+
+The two groups follow different patterns. Differentiating pay rises with satisfaction, with the largest jump ($72k) from Medium to High. Execution pay peaks in the Medium band and falls to its lowest level in the High band, so satisfaction among execution workers does not track pay. As a result, the gap between groups is widest at High satisfaction ($120k). Differentiating respondents also report higher average satisfaction, suggesting these roles are linked to both higher pay and higher satisfaction.
 
 # Session info
 

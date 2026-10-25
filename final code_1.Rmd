@@ -191,13 +191,13 @@ ggplot(df_langs, aes(x = reorder(Language, n), y = n)) +
 
 To substantiate your research argument that true skill value is driven by organizational differentiation (rather than routine execution), this step groups respondents by developer roles and advanced skill sets, calculating median and mean compensation premiums.
 
-The empirical data demonstrates that specialization and market differentiation serve as the primary drivers of earning potential in the tech industry. While generalist roles such as full-stack developers represent the largest workforce segment ($n = 230$), they command a baseline median compensation of $100,000.
+The empirical data demonstrates that specialization and market differentiation serve as the primary drivers of earning potential in the tech industry. While generalist roles such as full-stack developers represent the largest workforce segment, they command a baseline median compensation of $100,000.
 
-conversely, specialized positions like DevOps engineers ($n = 17$, median $144,700$) and data engineers ($n = 18$, median $137,500) yield premiums upwards of 37% to 44% above generalists due to talent scarcity in complex infrastructure domains. 
+conversely, specialized positions like DevOps engineers (median $144,700$) and data engineers (median $137,500) yield premiums upwards of 37% to 44% above generalists due to talent scarcity in complex infrastructure domains. 
 
-A parallel trend emerges in technical skill sets: high-adoption, foundational tools like SQL ($n = 460$, median $112,500$) and Python ($n = 417$, median $113,000$), show lower median earnings compared to niche, high-demand languages like Go ($n = 117$, median $138,000$) and Ruby ($n = 52$, median $135,000).
+A parallel trend emerges in technical skill sets: high-adoption, foundational tools like SQL (median $112,500$) and Python (median $113,000$), show lower median earnings compared to niche, high-demand languages like Go (median $138,000$) and Ruby (median $135,000).
 
-Ultimately, moving away from commoditized skill sets toward differentiated expertise—whether in specialized architecture, advanced domain execution, or technical management ($n = 26$, median $202,500), consistently yields significant economic rewards. 
+Ultimately, moving away from commoditized skill sets toward differentiated expertise—whether in specialized architecture, advanced domain execution, or technical management (median $202,500), consistently yields significant economic rewards. 
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -252,7 +252,7 @@ ggplot(role_comp_long, aes(x = reorder(DevType, Compensation), y = Compensation,
 
 This step cross-references JobSat (job satisfaction scores) with compensation and specialization to examine whether professionals tackling complex problem-solving report higher career leverage and satisfaction.
 
-The job satisfaction and compensation metrics further confirm that making professional differentiation is essential for maximizing earning potential. While high-supply generalist roles like full-stack developers ($n = 216$, median $100,000$) and front-end developers ($n = 29$, median $80,000$) occupy lower compensation tiers—with front-end developers also reporting the lowest job satisfaction (6.34)—differentiated roles command significant market premiums. Specialized technical roles such as data engineers ($n = 15$, median $125,000$) and solutions architects ($n = 47$, median $120,000$) leverage domain scarcity and complex system design to secure higher pay and top-tier job satisfaction (7.70). Most dramatically, engineering managers ($n = 20$) leverage leadership and strategic oversight to achieve the dataset's highest median compensation at $202,500—more than double the baseline for commoditized execution roles.   
+The job satisfaction and compensation metrics further confirm that making professional differentiation is essential for maximizing earning potential. While high-supply generalist roles like full-stack developers (median $100,000$) and front-end developers (median $80,000$) occupy lower compensation tiers—with front-end developers also reporting the lowest job satisfaction (6.34)—differentiated roles command significant market premiums. Specialized technical roles such as data engineers (median $125,000$) and solutions architects (median $120,000$) leverage domain scarcity and complex system design to secure higher pay and top-tier job satisfaction (7.70). Most dramatically, engineering managers leverage leadership and strategic oversight to achieve the dataset's highest median compensation at $202,500—more than double the baseline for commoditized execution roles.   
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -305,6 +305,11 @@ ggplot(role_satisfaction, aes(x = Avg_Job_Sat, y = Median_Comp, size = Count, co
   )
 
 ```
+
+The chart plots each role's average job satisfaction against its median compensation, with bubble size showing the number of respondents. Architects report the highest satisfaction (7.70), and engineering managers are close behind (7.65) while also earning by far the highest median pay ($202,500). At the other end, front-end developers report the lowest satisfaction (6.34) and, along with mobile developers, the lowest median pay ($80,000).
+
+Between these two ends the relationship is loose. Data engineers have the second-highest median pay ($125,000) but sit near the bottom on satisfaction (6.87), while embedded and desktop developers report above-average satisfaction (7.59 and 7.45) on below-average pay ($96,500 and $90,000). The two largest groups, full-stack and back-end developers, cluster in the middle at about 7.1. Satisfaction across all nine roles stays within a narrow range of 6.3 to 7.7, while median pay ranges from $80,000 to $202,500.
+
 ## Step F: Publication-Ready Visualizations
 Generate professional visualizations to embed directly into your Quarto report
 
@@ -380,7 +385,13 @@ ggplot(role_summary, aes(x = reorder(DevType, Median_Comp), y = Median_Comp, fil
 
 # cat("\n=== Specialized Data & AI Role Compensation Premiums ===\n")
 # print(head(role_summary, 10))
+```
 
+This chart shows median compensation for data, AI and engineering roles, with bar color showing the number of respondents. Engineering managers lead at $202,500, followed by database administrators ($200,000) and DevOps engineers ($144,700). Data engineers ($137,500), AI/ML engineers ($130,000) and applied scientists ($130,000) form the next tier.
+
+Analysis-focused roles sit at the bottom: data scientists have a median of $70,000 and data or business analysts $54,000. Roles that build and maintain systems, such as DevOps, data engineering and AI/ML engineering, earn more than roles centered on analyzing data, and the highest-paid role is a management position. Cloud infrastructure engineers are an exception among the engineering roles, with a median of $85,000.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # ==========================================
 # PART 2: Database Technology Valuation
@@ -434,7 +445,13 @@ ggplot(db_valuation_long, aes(x = reorder(Database, Compensation), y = Compensat
     panel.grid.minor = element_blank(),
     legend.position = "bottom"
   )
+```
 
+This chart compares median and mean compensation for each database used by at least 25 respondents. By median, cloud data platforms rank highest: BigQuery ($170,000), Snowflake ($150,000), Supabase ($144,400) and Cosmos DB ($140,000). The most widely used databases, PostgreSQL, MySQL, Microsoft SQL Server and SQLite, sit lower at $109,000 to $117,000, and MariaDB is lowest at $92,500.
+
+The mean is higher than the median for every database, often by several hundred thousand dollars. MongoDB, for example, has a median of $119,000 but a mean of $772,091. A small number of very high reported values pull the averages up, so the median better reflects typical pay. Based on the median, specialized cloud and analytics databases are associated with higher pay than common general-purpose databases.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # ==========================================
 # PART 3: AI Tool Adoption vs. Compensation
@@ -540,6 +557,10 @@ ggplot(tool_comp_long, aes(x = ToolBucket, y = Compensation, fill = Comp_Type)) 
 
 
 ```
+
+This chart groups respondents by the number of tools they use at work and compares median and mean compensation in each group. Median pay rises steadily as tool count increases, from $90,000 for Low (0-3 tools) to $110,000 for Moderate (4-6), $115,000 for High (7-10) and $120,000 for Very High (11-20). The Expert/Max group (21+ tools) breaks this pattern with the lowest median at $84,000, but it has only 14 respondents.
+
+The mean is far above the median in the lower buckets, reaching $804,553 for Low and around $480,000 to $510,000 for Moderate and High, which shows a few very large reported values pulling those averages up. In the Very High and Expert/Max groups the mean and median are much closer ($178,666 vs. $120,000 and $89,242 vs. $84,000). Based on the median, working with a broader set of tools is associated with higher pay, up to about 20 tools.
 
 
 
