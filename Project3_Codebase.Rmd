@@ -3,8 +3,8 @@ title: "Data 607 Project 3 - Developer Survey"
 author: "Muhammad Imran, Kenny Jeannite, Samantha Mesa, Tenzin Thakuri, Shanice Smith"
 date: "2026-10-25"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 # Group composition
