@@ -1,7 +1,7 @@
 ---
 title: "Data 607 Project 3 - Developer Survey"
 author: "Muhammad Imran, Kenny Jeannite, Samantha Mesa, Tenzin Thakuri, Shanice Smith"
-date: today
+date: "2026-10-25"
 output:
   pdf_document: default
   html_document: default
@@ -563,7 +563,9 @@ The mean is far above the median in the lower buckets, reaching \$804,553 for Lo
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Setup
+# Alternate Codebase
+
+## Setup
 
 Before anything runs, we're installing all the packages we need. Then we're defining where the data lives and create an output folder to save everything to. If the CSV hasn’t been downloaded yet, we download it.
 
@@ -580,7 +582,7 @@ dir.create(OUT_DIR, showWarnings = FALSE)
 if (!file.exists(DATA_FILE)) download.file(DATA_URL, DATA_FILE, mode = "wb", quiet = TRUE)
 ```
 
-# Group definitions
+## Group definitions
 
 We're sorting various different developer roles into different categories and storing them into variables ("DIFF", EXEC") and these roles can used with the different values of the "WORKING" variable.
 
@@ -596,7 +598,7 @@ EXEC <- c("Developer, full-stack", "Developer, back-end", "Developer, front-end"
 WORKING <- c("Employed", "Independent contractor, freelancer, or self-employed")
 ```
 
-# Load data
+## Load data
 
 We're reading into the CSV with R and storing the data into the raw variable.
 
@@ -605,7 +607,7 @@ raw <- read_csv(DATA_FILE, col_types = cols(.default = col_character()),
                 locale = locale(encoding = "UTF-8"), show_col_types = FALSE)
 ```
 
-# Clean data
+## Clean data
 
 We're cleaning out the raw variable. We're filtering out any rows we don't need, removing duplicates, and converting compensation and job satisfaction from character to numeric. Then we narrow down to US-based, actively working people whose pay falls between \$20K–\$1M. After that, we split the DevType column (since one person can have multiple roles), map each role to a skill group, and then figure out each respondent's primary group — if they have even one Differentiating role, they’re classified as Differentiating. Finally, we join that classification back to the main dataset and save both cleaned files.
 
@@ -664,7 +666,7 @@ write_csv(summary_tbl, file.path(OUT_DIR, "summary_by_group.csv"))
 kable(summary_tbl, format.args = list(big.mark = ","))
 ```
 
-# Plot theme
+## Plot theme
 
 This is our visual theme for plots across our various graphs, defined once at the beginning.
 
@@ -679,7 +681,7 @@ theme_proj <- theme_minimal(base_size = 12) +
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-# Graph 1
+## Graph 1
 
 We're displaying a bar chart of median pay by individual role and skill group, filtered to roles with at least 5 respondents.
 
@@ -706,7 +708,7 @@ ggsave(file.path(OUT_DIR, "graph1_comp_by_role.png"), p1,
 p1
 ```
 
-# Graph 2
+## Graph 2
 
 We're displaying a grouped bar chart compares pay across job satisfaction levels (Low, Medium, High) for both skill groups side by side.
 
@@ -737,7 +739,7 @@ ggsave(file.path(OUT_DIR, "graph2_satisfaction_vs_comp.png"), p2,
 p2
 ```
 
-# Session info
+## Session info
 
 A log of our R environment details.
 
