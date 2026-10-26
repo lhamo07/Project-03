@@ -3,8 +3,8 @@ title: "Data 607 Project 3 - Developer Survey"
 author: "Muhammad Imran, Kenny Jeannite, Samantha Mesa, Tenzin Thakuri, Shanice Smith"
 date: "2026-10-25"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 # Group composition
@@ -646,6 +646,8 @@ write_csv(tidy,       file.path(OUT_DIR, "data_clean.csv"))
 write_csv(roles_long, file.path(OUT_DIR, "data_roles_long.csv"))
 ```
 
+The raw dataset contained 1036 rows and 40 columns. During data cleaning, rows with invalid ResponseId values were removed and duplicate ResponseId values were eliminated, leaving 1,033 valid, unique respondents.The dataset was then filtered to include working professionals in the United States of America with annual total compensation (CompTotal) between \$20000 and \$1000000, which left 191 respondents. DevType role were classified into two groups: Differentiating and Execution.Respondents whose roles did not match either group were excluded, leaving a final sample of 168 respondents.
+
 ```{r attrition}
 tibble(Step = c("Raw rows", "Valid, unique ResponseId",
                 "US working professionals with usable pay", "Classified into a skill group"),
@@ -665,6 +667,10 @@ summary_tbl <- tidy |>
 write_csv(summary_tbl, file.path(OUT_DIR, "summary_by_group.csv"))
 kable(summary_tbl, format.args = list(big.mark = ","))
 ```
+
+The summary statistics show differences in compensation and job satisfaction between the Differentiating and Execution groups. The Differentiating group included 43 respondents, while the Execution group included 125 respondents. Median annual compensation was \$183,000 for the Differentiating group and \$138,000 for the Execution group, a difference of \$45,000, or approximately 32.6%. Mean job satisfaction was also higher in the Differentiating group (8.00) than in the Execution group (7.28). These satisfaction averages were based on 31 and 118 respondents, respectively, who reported job satisfaction.
+
+These findings are consistent with our argument that roles involving specialized technical expertise, data science, AI/ML, cloud infrastructure, system architecture, and technical leadership are associated with higher compensation and job satisfaction than roles primarily focused on software development and implementation.
 
 ## Plot theme
 
@@ -708,6 +714,10 @@ ggsave(file.path(OUT_DIR, "graph1_comp_by_role.png"), p1,
 p1
 ```
 
+The role-level chart shows substantial variation in median annual compensation across the eight roles with at least five respondents. Mobile developers had the highest median compensation at \$240,000, although this estimate was based on only five respondents. Among the Differentiating roles, engineering managers had a median compensation of \$213,000, while software or solutions architects had a median of \$175,000. Both roles had higher median compensation than several execution-oriented roles, including back-end developers (\$155,000) and full-stack developers (\$135,000).
+
+However, the results do not show a consistent advantage for every Differentiating role. Applied scientists had a median compensation of \$130,000, below that of back-end developers. These exceptions suggest that compensation varies by individual role, not simply by skill group.
+
 ## Graph 2
 
 We're displaying a grouped bar chart compares pay across job satisfaction levels (Low, Medium, High) for both skill groups side by side.
@@ -738,6 +748,10 @@ ggsave(file.path(OUT_DIR, "graph2_satisfaction_vs_comp.png"), p2,
        width = 9, height = 5.5, dpi = 180, bg = "white")
 p2
 ```
+
+The chart compares median compensation across three job satisfaction bands for the Differentiating and Execution groups. In all three bands, the Differentiating group had higher median compensation. In the low-satisfaction band, the medians were \$168,000 and \$132,000; in the medium-satisfaction band, they were \$178,000 and \$150,000; and in the high-satisfaction band, they were \$250,000 and \$130,000, respectively.
+
+The largest difference appeared in the high-satisfaction band. However, the sample sizes within each band should be considered when interpreting these results. Overall, the Differentiating group had higher median compensation across all three satisfaction levels.
 
 ## Session info
 
