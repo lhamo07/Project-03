@@ -1,0 +1,169 @@
+ResponseId,CompTotal,JobSat,Role,SkillGroup
+32,250000,8,"Developer, full-stack",Execution
+34,175000,8,Data engineer,Differentiating
+38,109000,10,"Developer, full-stack",Execution
+40,150000,2,"Developer, full-stack",Execution
+41,99999,8,"Developer, full-stack",Execution
+42,270000,3,"Developer, front-end",Execution
+43,250000,8,"Developer, mobile",Execution
+54,151000,7,"Developer, full-stack",Execution
+64,245000,9,"Developer, full-stack",Execution
+73,150000,8,"Developer, back-end",Execution
+82,116000,10,"Developer, desktop or enterprise applications",Execution
+84,90000,9,"Developer, full-stack",Execution
+101,155000,6,"Developer, back-end",Execution
+107,75000,5,"Developer, front-end",Execution
+110,131000,8,"Developer, desktop or enterprise applications",Execution
+111,120000,2,"Developer, full-stack",Execution
+122,45000,10,"Developer, full-stack",Execution
+138,87000,10,"Developer, full-stack",Execution
+149,150000,8,"Developer, full-stack",Execution
+150,200000,5,"Developer, full-stack",Execution
+160,165000,7,"Developer, full-stack",Execution
+198,190000,8,"Developer, full-stack",Execution
+201,155000,9,"Developer, back-end",Execution
+221,200000,9,"Developer, back-end",Execution
+228,165000,8,"Developer, back-end",Execution
+229,260000,NA,"Architect, software or solutions",Differentiating
+235,135000,5,"Architect, software or solutions",Differentiating
+248,80000,9,"Developer, full-stack",Execution
+257,140000,NA,"Architect, software or solutions",Differentiating
+260,140000,NA,"Architect, software or solutions",Differentiating
+264,162000,3,"Developer, back-end",Execution
+270,150000,5,"Developer, full-stack",Execution
+273,135000,10,"Developer, back-end",Execution
+288,106000,4,"Developer, full-stack",Execution
+291,100000,7,"Developer, desktop or enterprise applications",Execution
+294,250000,9,"Developer, full-stack",Execution
+297,210000,10,"Developer, full-stack",Execution
+302,175000,7,"Architect, software or solutions",Differentiating
+305,250000,9,Engineering manager,Differentiating
+311,100000,10,"Developer, back-end",Execution
+360,99000,7,"Developer, embedded applications or devices",Execution
+361,240000,4,"Developer, mobile",Execution
+362,150000,10,"Developer, full-stack",Execution
+373,160000,7,"Developer, full-stack",Execution
+377,230000,9,"Developer, back-end",Execution
+383,104000,4,"Developer, full-stack",Execution
+388,135000,5,"Developer, full-stack",Execution
+403,250000,8,Engineering manager,Differentiating
+405,173250,8,"Developer, back-end",Execution
+409,205000,10,Engineering manager,Differentiating
+411,120000,6,"Developer, full-stack",Execution
+426,195000,8,"Architect, software or solutions",Differentiating
+440,120000,8,"Developer, mobile",Execution
+446,40000,NA,"Developer, front-end",Execution
+473,127500,7,"Architect, software or solutions",Differentiating
+477,120000,9,"Developer, back-end",Execution
+480,185000,6,"Architect, software or solutions",Differentiating
+483,210000,8,"Developer, full-stack",Execution
+504,150000,NA,"Developer, front-end",Execution
+505,250000,9,Engineering manager,Differentiating
+511,104000,8,"Developer, full-stack",Execution
+545,90000,7,Applied scientist,Differentiating
+547,138000,8,"Developer, full-stack",Execution
+556,212750,9,Engineering manager,Differentiating
+581,240000,NA,"Founder, technology or otherwise",Differentiating
+584,376000,8,"Developer, back-end",Execution
+614,114038,7,"Developer, back-end",Execution
+623,300000,8,Data engineer,Differentiating
+627,180000,10,"Developer, full-stack",Execution
+628,117700,NA,"Developer, QA or test",Execution
+642,220000,10,"Developer, back-end",Execution
+648,170000,NA,Engineering manager,Differentiating
+649,175000,7,Engineering manager,Differentiating
+654,233000,7,"Developer, front-end",Execution
+663,350000,10,"Senior executive (C-suite, VP, etc.)",Differentiating
+670,294400,10,"Architect, software or solutions",Differentiating
+690,220000,7,"Developer, full-stack",Execution
+712,140000,7,"Developer, full-stack",Execution
+713,115000,8,"Developer, full-stack",Execution
+719,90000,9,"Developer, full-stack",Execution
+726,450000,8,"Developer, full-stack",Execution
+748,135000,6,"Developer, desktop or enterprise applications",Execution
+755,120000,9,"Developer, back-end",Execution
+774,100000,8,"Developer, full-stack",Execution
+780,165000,10,"Architect, software or solutions",Differentiating
+783,180000,9,"Developer, back-end",Execution
+801,400000,9,"Architect, software or solutions",Differentiating
+803,160000,6,"Developer, mobile",Execution
+821,272000,8,"Developer, front-end",Execution
+834,60000,10,"Developer, game or graphics",Execution
+845,103000,7,Data scientist,Differentiating
+878,190000,10,Cloud infrastructure engineer,Differentiating
+879,88000,7,"Developer, front-end",Execution
+915,76000,NA,Applied scientist,Differentiating
+928,91000,10,"Developer, full-stack",Execution
+930,125000,9,"Developer, full-stack",Execution
+941,82000,NA,"Developer, full-stack",Execution
+946,100000,NA,Data scientist,Differentiating
+959,200000,8,"Developer, full-stack",Execution
+963,300000,8,"Developer, back-end",Execution
+965,59000,8,"Developer, full-stack",Execution
+990,160000,7,Engineering manager,Differentiating
+1007,180000,8,"Developer, full-stack",Execution
+1016,113000,9,"Developer, back-end",Execution
+1024,150000,NA,Data engineer,Differentiating
+1031,400000,10,"Senior executive (C-suite, VP, etc.)",Differentiating
+1036,160000,10,"Developer, full-stack",Execution
+1040,74000,10,"Developer, full-stack",Execution
+1050,110000,8,"Developer, full-stack",Execution
+1052,73100,2,"Developer, front-end",Execution
+1073,250000,6,Engineering manager,Differentiating
+1075,320000,NA,"Senior executive (C-suite, VP, etc.)",Differentiating
+1086,148800,3,"Developer, full-stack",Execution
+1106,148000,NA,"Developer, back-end",Execution
+1122,175000,8,"Developer, full-stack",Execution
+1123,180000,7,"Architect, software or solutions",Differentiating
+1134,200000,9,"Developer, full-stack",Execution
+1156,155000,3,"Developer, full-stack",Execution
+1162,217000,3,"Developer, back-end",Execution
+1164,129000,10,"Developer, embedded applications or devices",Execution
+1165,77000,7,"Developer, front-end",Execution
+1168,128000,3,"Developer, full-stack",Execution
+1172,150000,8,"Developer, full-stack",Execution
+1184,57000,0,"Developer, full-stack",Execution
+1411,187000,7,Engineering manager,Differentiating
+1413,200000,10,"Developer, full-stack",Execution
+1417,221402,3,"Developer, back-end",Execution
+1418,90000,8,"Developer, front-end",Execution
+1423,150000,9,"Developer, back-end",Execution
+1442,188000,7,"Developer, full-stack",Execution
+1443,192500,9,"Developer, full-stack",Execution
+1444,65500,8,"Developer, full-stack",Execution
+1483,102000,7,"Developer, full-stack",Execution
+1489,110000,5,"Developer, full-stack",Execution
+1564,132000,1,"Developer, back-end",Execution
+1604,120000,6,"Developer, QA or test",Execution
+1610,780000,8,Engineering manager,Differentiating
+1613,54000,6,"Developer, full-stack",Execution
+1615,125000,8,Data engineer,Differentiating
+1620,130000,9,"Developer, desktop or enterprise applications",Execution
+1646,230000,7,"Developer, back-end",Execution
+1647,80000,5,"Developer, full-stack",Execution
+1696,300000,8,"Developer, full-stack",Execution
+1704,129000,3,"Developer, back-end",Execution
+1706,48000,10,"Developer, full-stack",Execution
+1708,106000,10,"Developer, desktop or enterprise applications",Execution
+1737,500000,8,AI/ML engineer,Differentiating
+1738,150000,NA,"Developer, back-end",Execution
+1742,130000,NA,Applied scientist,Differentiating
+1749,225000,9,"Developer, back-end",Execution
+1763,400000,0,"Developer, mobile",Execution
+1781,216000,9,"Developer, full-stack",Execution
+1784,350000,8,"Developer, desktop or enterprise applications",Execution
+1785,130000,NA,"Developer, full-stack",Execution
+1797,150000,NA,Applied scientist,Differentiating
+1805,78000,4,"Developer, full-stack",Execution
+1838,105000,2,"Developer, desktop or enterprise applications",Execution
+1844,166000,10,"Developer, desktop or enterprise applications",Execution
+1877,142000,8,"Developer, back-end",Execution
+1880,120000,10,"Developer, full-stack",Execution
+1893,62000,9,"Senior executive (C-suite, VP, etc.)",Differentiating
+1894,115000,9,"Developer, full-stack",Execution
+1904,275000,NA,Applied scientist,Differentiating
+1937,105966,7,"Developer, embedded applications or devices",Execution
+1941,80000,10,"Developer, front-end",Execution
+1944,150000,6,"Architect, software or solutions",Differentiating
+1957,183000,8,Cloud infrastructure engineer,Differentiating
+1960,170000,9,"Developer, desktop or enterprise applications",Execution
