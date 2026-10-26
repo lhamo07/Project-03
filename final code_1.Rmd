@@ -1,7 +1,7 @@
 ---
-title: "Untitled"
-author: "Mu"
-date: "2026-10-18"
+title: "Data 607 Project 3 - Developer Survey"
+author: "Muhammad Imran, Kenny Jeannite, Samantha Mesa, Tenzin Thakuri, "Shanice Smith"
+date: today
 output:
   pdf_document: default
   html_document: default
@@ -557,6 +557,177 @@ This chart groups respondents by the number of tools they use at work and compar
 
 The mean is far above the median in the lower buckets, reaching \$804,553 for Low and around \$480,000 to \$510,000 for Moderate and High, which shows a few very large reported values pulling those averages up. In the Very High and Expert/Max groups the mean and median are much closer (\$178,666 vs. \$120,000 and \$89,242 vs. \$84,000). Based on the median, working with a broader set of tools is associated with higher pay, up to about 20 tools.
 
-# Critical Analysis
+----
 
-# Conclusion
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+Before anything runs, we're installing all the packages we need. Then we're defining where the data lives and create an output folder to save everything to. If the CSV hasn’t been downloaded yet, we download it.
+
+```{r packages}
+pkgs <- c("readr", "dplyr", "tidyr", "stringr", "ggplot2", "scales", "knitr")
+missing <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
+invisible(lapply(pkgs, library, character.only = TRUE))
+
+DATA_URL  <- "https://raw.githubusercontent.com/lhamo07/Project-03/main/data_final.csv"
+DATA_FILE <- "data_final.csv"
+OUT_DIR   <- "output"
+dir.create(OUT_DIR, showWarnings = FALSE)
+if (!file.exists(DATA_FILE)) download.file(DATA_URL, DATA_FILE, mode = "wb", quiet = TRUE)
+```
+
+# Group definitions
+We're sorting various different developer roles into different categories and storing them into variables ("DIFF", EXEC") and these roles can used with the different values of the "WORKING" variable.
+```{r groups}
+DIFF <- c("Architect, software or solutions", "Data scientist", "AI/ML engineer",
+          "Applied scientist", "Data engineer", "Cloud infrastructure engineer",
+          "Engineering manager", "Senior executive (C-suite, VP, etc.)",
+          "Founder, technology or otherwise")
+EXEC <- c("Developer, full-stack", "Developer, back-end", "Developer, front-end",
+          "Developer, desktop or enterprise applications", "Developer, mobile",
+          "Developer, embedded applications or devices", "Developer, QA or test",
+          "Developer, game or graphics")
+WORKING <- c("Employed", "Independent contractor, freelancer, or self-employed")
+```
+
+# Load data
+We're reading into the CSV with R and storing the data into the raw variable.
+
+```{r load}
+raw <- read_csv(DATA_FILE, col_types = cols(.default = col_character()),
+                locale = locale(encoding = "UTF-8"), show_col_types = FALSE)
+```
+
+# Clean data
+We're cleaning out the raw variable. We're filtering out any rows we don't need, removing duplicates, and converting compensation and job satisfaction from character to numeric. Then we narrow down to US-based, actively working people whose pay falls between $20K–$1M. After that, we split the DevType column (since one person can have multiple roles), map each role to a skill group, and then figure out each respondent's primary group — if they have even one Differentiating role, they’re classified as Differentiating. Finally, we join that classification back to the main dataset and save both cleaned files.
+```{r clean}
+n_raw <- nrow(raw)
+
+df <- raw |>
+  filter(str_detect(ResponseId, "^[0-9]+$")) |>
+  distinct(ResponseId, .keep_all = TRUE) |>
+  mutate(CompTotal = suppressWarnings(as.numeric(CompTotal)),
+         JobSat    = suppressWarnings(as.numeric(JobSat)))
+n_valid <- nrow(df)
+
+df <- df |>
+  filter(Employment %in% WORKING, !is.na(DevType),
+         Country == "United States of America",
+         between(CompTotal, 20000, 1000000))
+n_us <- nrow(df)
+
+roles_long <- df |>
+  select(ResponseId, CompTotal, JobSat, DevType) |>
+  separate_rows(DevType, sep = ";") |>
+  mutate(Role = str_trim(DevType), DevType = NULL,
+         SkillGroup = case_when(Role %in% DIFF ~ "Differentiating",
+                                Role %in% EXEC ~ "Execution",
+                                TRUE ~ NA_character_)) |>
+  filter(!is.na(SkillGroup))
+
+resp_group <- roles_long |>
+  group_by(ResponseId) |>
+  summarise(SkillGroup = if (any(SkillGroup == "Differentiating")) "Differentiating" else "Execution",
+            .groups = "drop")
+tidy <- df |> select(-DevType) |> inner_join(resp_group, by = "ResponseId")
+
+write_csv(tidy,       file.path(OUT_DIR, "data_clean.csv"))
+write_csv(roles_long, file.path(OUT_DIR, "data_roles_long.csv"))
+```
+
+```{r attrition}
+tibble(Step = c("Raw rows", "Valid, unique ResponseId",
+                "US working professionals with usable pay", "Classified into a skill group"),
+       Respondents = c(n_raw, n_valid, n_us, nrow(tidy))) |>
+  kable()
+```
+
+```{r summary}
+summary_tbl <- tidy |>
+  group_by(SkillGroup) |>
+  summarise(n = n(),
+            median_comp = median(CompTotal),
+            mean_comp   = round(mean(CompTotal)),
+            mean_jobsat = round(mean(JobSat, na.rm = TRUE), 2),
+            n_jobsat    = sum(!is.na(JobSat)),
+            .groups = "drop")
+write_csv(summary_tbl, file.path(OUT_DIR, "summary_by_group.csv"))
+kable(summary_tbl, format.args = list(big.mark = ","))
+```
+
+# Plot theme
+This is our visual theme for plots across our various graphs, defined once at the beginning.
+```{r theme}
+COL <- c(Differentiating = "#2563c4", Execution = "#d9822b")
+theme_proj <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold", color = "#1f2937"),
+        plot.subtitle = element_text(color = "#6b7280"),
+        axis.text = element_text(color = "#6b7280"),
+        axis.title = element_text(color = "#6b7280"),
+        legend.position = "bottom", legend.title = element_blank())
+```
+
+# Graph 1
+We're displaying a bar chart of median pay by individual role and skill group, filtered to roles with at least 5 respondents.
+```{r graph1, fig.height=6}
+g1 <- roles_long |>
+  group_by(Role, SkillGroup) |>
+  summarise(median_comp = median(CompTotal), n = n(), .groups = "drop") |>
+  filter(n >= 5)
+
+p1 <- ggplot(g1, aes(median_comp / 1000, reorder(Role, median_comp), fill = SkillGroup)) +
+  geom_col(width = 0.62) +
+  geom_text(aes(label = sprintf("$%.0fk  (n=%d)", median_comp / 1000, n)),
+            hjust = -0.1, size = 3.3, color = "#1f2937") +
+  scale_fill_manual(values = COL) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.22))) +
+  labs(title = "Median pay by role: differentiating vs. execution",
+       subtitle = "US respondents, roles with n>=5. Respondents with several roles appear in each.",
+       x = "Median annual compensation (USD thousands)", y = NULL) +
+  theme_proj +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#e5e7eb"))
+ggsave(file.path(OUT_DIR, "graph1_comp_by_role.png"), p1,
+       width = 9.5, height = 6, dpi = 180, bg = "white")
+p1
+```
+
+# Graph 2
+We're displaying a grouped bar chart compares pay across job satisfaction levels (Low, Medium, High) for both skill groups side by side.
+```{r graph2}
+g2 <- tidy |>
+  filter(!is.na(JobSat)) |>
+  mutate(Band = cut(JobSat, c(-Inf, 6, 8, Inf),
+                    labels = c("Low (0-6)", "Medium (7-8)", "High (9-10)"))) |>
+  group_by(Band, SkillGroup) |>
+  summarise(median_comp = median(CompTotal), n = n(), .groups = "drop")
+
+p2 <- ggplot(g2, aes(Band, median_comp / 1000, fill = SkillGroup)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.68) +
+  geom_text(aes(label = sprintf("$%.0fk\nn=%d", median_comp / 1000, n)),
+            position = position_dodge(width = 0.75), vjust = -0.3,
+            size = 3.2, color = "#1f2937") +
+  scale_fill_manual(values = COL) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2))) +
+  labs(title = "Pay and satisfaction by skill group",
+       subtitle = "US respondents with reported satisfaction. Role group is a proxy for task type.",
+       x = "Job satisfaction band (JobSat, 0-10)",
+       y = "Median annual compensation (USD thousands)") +
+  theme_proj +
+  theme(panel.grid.major.y = element_line(color = "#e5e7eb"),
+        panel.grid.major.x = element_blank())
+ggsave(file.path(OUT_DIR, "graph2_satisfaction_vs_comp.png"), p2,
+       width = 9, height = 5.5, dpi = 180, bg = "white")
+p2
+```
+
+# Session info
+A log of our R environment details.
+```{r session}
+writeLines(capture.output(sessionInfo()), file.path(OUT_DIR, "sessionInfo.txt"))
+sessionInfo()
+```
